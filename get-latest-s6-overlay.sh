@@ -2,6 +2,8 @@
 
 TARGETARCH=$1
 TARGETVARIANT=$2
+env
+
 case ${TARGETARCH} in
 arm)
   \
