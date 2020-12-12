@@ -1,15 +1,13 @@
-
-
 # alpine-cloudplow-rclone-arm
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%203-blue.svg?style=flat-square)](https://github.com/kdckrs/alpine-cloudplow-rclone-arm/blob/main/LICENSE)
-[![Docker Automated build](https://img.shields.io/docker/cloud/automated/kdckrs/alpine-cloudplow-rclone-arm?label=Docker+Cloud+build+type)](https://hub.docker.com/r/sabrsorensen/alpine-cloudplow)
-[![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/kdckrs/alpine-cloudplow-rclone-arm?label=Docker+Cloud+build+status)](https://hub.docker.com/r/sabrsorensen/alpine-cloudplow)
+[![Docker Automated build](https://img.shields.io/docker/cloud/automated/kdckrs/alpine-cloudplow-rclone-arm?label=Docker+Cloud+build+type)](https://hub.docker.com/r/kdckrs/alpine-cloudplow-rclone-arm)
+[![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/kdckrs/alpine-cloudplow-rclone-arm?label=Docker+Cloud+build+status)](https://hub.docker.com/r/kdckrs/alpine-cloudplow-rclone-arm)
 [![Docker Pulls](https://img.shields.io/docker/pulls/kdckrs/alpine-cloudplow-rclone-arm)](https://hub.docker.com/r/kdckrs/alpine-cloudplow-rclone-arm)
-[![Docker image size](https://images.microbadger.com/badges/image/kdckrs/alpine-cloudplow-rclone-arm.svg)](https://microbadger.com/images/sabrsorensen/alpine-cloudplow "Get your own image badge on microbadger.com")
+[![Docker image size](https://images.microbadger.com/badges/image/kdckrs/alpine-cloudplow-rclone-arm.svg)](https://microbadger.com/images/kdckrs/alpine-cloudplow-rclone-arm "Get your own image badge on microbadger.com")
 [![rclone version](https://img.shields.io/github/v/release/rclone/rclone?label=rclone%20version)](https://hub.docker.com/r/rclone/rclone)
 
-ARM compatible Docker image for the [cloudplow](https://github.com/l3uddz/cloudplow) cloud media sync service, using [rclone's official Docker image](https://hub.docker.com/r/rclone/rclone) based on Alpine Linux as a foundation. Based on [sabrsorensen/alpine-cloudplow](https://github.com/sabrsorensen/alpine-cloudplow)
+ARM based Docker image for the [cloudplow](https://github.com/l3uddz/cloudplow) cloud media sync service, using [rclone's official Docker image](https://hub.docker.com/r/rclone/rclone) based on Alpine Linux as a foundation. Based on [sabrsorensen/alpine-cloudplow](https://github.com/sabrsorensen/alpine-cloudplow)
 
 ## Application
 
