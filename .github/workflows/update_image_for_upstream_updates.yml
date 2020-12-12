@@ -15,7 +15,7 @@ jobs:
 
       - name: Check for upstream updates
         id: check
-        run: pip install docker gitpython requests wheel && python .github/workflows/check_upstream_versions.py
+        run: pip install --upgrade docker gitpython requests wheel && python .github/workflows/check_upstream_versions.py
 
   build:
     runs-on: ubuntu-latest
