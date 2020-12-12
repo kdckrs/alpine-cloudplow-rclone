@@ -1,13 +1,15 @@
-# alpine-cloudplow
 
-[![License: GPL v3](https://img.shields.io/badge/License-GPL%203-blue.svg?style=flat-square)](https://github.com/sabrsorensen/alpine-cloudplow/blob/main/LICENSE)
-[![Docker Automated build](https://img.shields.io/docker/cloud/automated/sabrsorensen/alpine-cloudplow?label=Docker+Cloud+build+type)](https://hub.docker.com/r/sabrsorensen/alpine-cloudplow)
-[![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/sabrsorensen/alpine-cloudplow?label=Docker+Cloud+build+status)](https://hub.docker.com/r/sabrsorensen/alpine-cloudplow)
-[![Docker Pulls](https://img.shields.io/docker/pulls/sabrsorensen/alpine-cloudplow)](https://hub.docker.com/r/sabrsorensen/alpine-cloudplow)
-[![Docker image size](https://images.microbadger.com/badges/image/sabrsorensen/alpine-cloudplow.svg)](https://microbadger.com/images/sabrsorensen/alpine-cloudplow "Get your own image badge on microbadger.com")
+
+# alpine-cloudplow-rclone-arm
+
+[![License: GPL v3](https://img.shields.io/badge/License-GPL%203-blue.svg?style=flat-square)](https://github.com/kdckrs/alpine-cloudplow-rclone-arm/blob/main/LICENSE)
+[![Docker Automated build](https://img.shields.io/docker/cloud/automated/kdckrs/alpine-cloudplow-rclone-arm?label=Docker+Cloud+build+type)](https://hub.docker.com/r/sabrsorensen/alpine-cloudplow)
+[![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/kdckrs/alpine-cloudplow-rclone-arm?label=Docker+Cloud+build+status)](https://hub.docker.com/r/sabrsorensen/alpine-cloudplow)
+[![Docker Pulls](https://img.shields.io/docker/pulls/kdckrs/alpine-cloudplow-rclone-arm)](https://hub.docker.com/r/kdckrs/alpine-cloudplow-rclone-arm)
+[![Docker image size](https://images.microbadger.com/badges/image/kdckrs/alpine-cloudplow-rclone-arm.svg)](https://microbadger.com/images/sabrsorensen/alpine-cloudplow "Get your own image badge on microbadger.com")
 [![rclone version](https://img.shields.io/github/v/release/rclone/rclone?label=rclone%20version)](https://hub.docker.com/r/rclone/rclone)
 
-A Docker image for the [cloudplow](https://github.com/l3uddz/cloudplow) cloud media sync service, using [rclone's official Docker image](https://hub.docker.com/r/rclone/rclone) based on Alpine Linux as a foundation.
+ARM compatible Docker image for the [cloudplow](https://github.com/l3uddz/cloudplow) cloud media sync service, using [rclone's official Docker image](https://hub.docker.com/r/rclone/rclone) based on Alpine Linux as a foundation. Based on [sabrsorensen/alpine-cloudplow](https://github.com/sabrsorensen/alpine-cloudplow)
 
 ## Application
 
@@ -25,7 +27,7 @@ Sample docker-compose.yml configuration, where the host's rclone.conf is stored 
 
 ```yaml
 cloudplow:
-  image: sabrsorensen/alpine-cloudplow
+  image: kdckrs/alpine-cloudplow-rclone-arm
   container_name: cloudplow
   environment:
     - PUID=`id -u cloudplow`
@@ -35,10 +37,10 @@ cloudplow:
     - CLOUDPLOW_LOGLEVEL=DEBUG
     - CLOUDPLOW_CACHEFILE=/config/cache.db
   volumes:
-    - /opt/cloudplow:/config/:rw
-    - /home/<user>/.config/rclone:/rclone_config/:rw
-    - /home/<user>/google_drive_service_accounts:/service_accounts/:rw
-    - /imported_media:/data/imported_media:rw
+    - /opt/cloudplow:/config
+    - /home/<user>/.config/rclone:/rclone_config
+    - /home/<user>/google_drive_service_accounts:/service_accounts
+    - /mnt:/data
     - /etc/localtime:/etc/localtime:ro
   restart: unless-stopped
 ```
@@ -91,7 +93,7 @@ Upon first run, the container will generate a sample config.json in the containe
             },
             "remove_empty_dir_depth": 2,
             "sync_remote": "googledrive:/media/",
-            "upload_folder": "/data/imported_media",
+            "upload_folder": "/data/local/Media",
             "upload_remote": "googledrive:/media/"
         },
         ...
@@ -104,7 +106,7 @@ Upon first run, the container will generate a sample config.json in the containe
             "exclude_open_files": true,
             "max_size_gb": 0,
             "opened_excludes": [
-                "/data/imported_media"
+                "/data/local/Media"
             ],
             "schedule": {
                 "allowed_from": "01:00",
