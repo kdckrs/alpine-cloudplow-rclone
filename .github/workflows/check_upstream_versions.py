@@ -19,7 +19,7 @@ try:
         os.environ['GITHUB_REPOSITORY'], command='rclone version', auto_remove=True, entrypoint='').decode('UTF-8').split('\n')[0].split(' ')[1].strip()
     old_versions['cloudplow_commit_ref'] = client.containers.run(
         os.environ['GITHUB_REPOSITORY'], command='git --work-tree=/opt/cloudplow rev-parse HEAD', auto_remove=True, entrypoint='').decode('UTF-8').strip()
-    old_versions['alpine-cloudplow_commit_ref'] = client.images.get(
+    old_versions['alpine-cloudplow-rclone_commit_ref'] = client.images.get(
         os.environ['GITHUB_REPOSITORY']).labels['org.label-schema.vcs-ref']
     old_versions['s6_release'] = client.containers.run(
         os.environ['GITHUB_REPOSITORY'], command='cat /etc/S6_RELEASE', auto_remove=True, entrypoint='').decode('UTF-8').strip()
@@ -31,7 +31,7 @@ current_versions['rclone_release_name'] = requests.get(
     'https://api.github.com/repos/rclone/rclone/releases/latest').json()["tag_name"]
 current_versions['cloudplow_commit_ref'] = requests.get(
     'https://api.github.com/repos/l3uddz/cloudplow/commits/master').json()["sha"]
-current_versions['alpine-cloudplow_commit_ref'] = Repo(
+current_versions['alpine-cloudplow-rclone_commit_ref'] = Repo(
     '.').commit('HEAD').hexsha
 current_versions['s6_release'] = requests.get(
     'https://api.github.com/repos/just-containers/s6-overlay/releases/latest').json()["tag_name"]

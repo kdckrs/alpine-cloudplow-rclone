@@ -1,13 +1,13 @@
-# alpine-cloudplow-rclone-arm
+# alpine-cloudplow-rclone
 
-[![License: GPL v3](https://img.shields.io/badge/License-GPL%203-blue.svg?style=flat-square)](https://github.com/kdckrs/alpine-cloudplow-rclone-arm/blob/main/LICENSE)
-[![Docker Automated build](https://img.shields.io/docker/cloud/automated/kdckrs/alpine-cloudplow-rclone-arm?label=Docker+Cloud+build+type)](https://hub.docker.com/r/kdckrs/alpine-cloudplow-rclone-arm)
-[![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/kdckrs/alpine-cloudplow-rclone-arm?label=Docker+Cloud+build+status)](https://hub.docker.com/r/kdckrs/alpine-cloudplow-rclone-arm)
-[![Docker Pulls](https://img.shields.io/docker/pulls/kdckrs/alpine-cloudplow-rclone-arm)](https://hub.docker.com/r/kdckrs/alpine-cloudplow-rclone-arm)
-[![Docker image size](https://images.microbadger.com/badges/image/kdckrs/alpine-cloudplow-rclone-arm.svg)](https://microbadger.com/images/kdckrs/alpine-cloudplow-rclone-arm "Get your own image badge on microbadger.com")
+[![License: GPL v3](https://img.shields.io/badge/License-GPL%203-blue.svg?style=flat-square)](https://github.com/kdckrs/alpine-cloudplow-rclone/blob/main/LICENSE)
+[![Docker Automated build](https://img.shields.io/docker/cloud/automated/kdckrs/alpine-cloudplow-rclone?label=Docker+Cloud+build+type)](https://hub.docker.com/r/kdckrs/alpine-cloudplow-rclone)
+[![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/kdckrs/alpine-cloudplow-rclone?label=Docker+Cloud+build+status)](https://hub.docker.com/r/kdckrs/alpine-cloudplow-rclone)
+[![Docker Pulls](https://img.shields.io/docker/pulls/kdckrs/alpine-cloudplow-rclone)](https://hub.docker.com/r/kdckrs/alpine-cloudplow-rclone)
+[![Docker image size](https://images.microbadger.com/badges/image/kdckrs/alpine-cloudplow-rclone.svg)](https://microbadger.com/images/kdckrs/alpine-cloudplow-rclone "Get your own image badge on microbadger.com")
 [![rclone version](https://img.shields.io/github/v/release/rclone/rclone?label=rclone%20version)](https://hub.docker.com/r/rclone/rclone)
 
-ARM based Docker image for the [cloudplow](https://github.com/l3uddz/cloudplow) cloud media sync service, using [rclone's official Docker image](https://hub.docker.com/r/rclone/rclone) based on Alpine Linux as a foundation. Based on [sabrsorensen/alpine-cloudplow](https://github.com/sabrsorensen/alpine-cloudplow)
+Docker image for the [cloudplow](https://github.com/l3uddz/cloudplow) cloud media sync service, using [rclone's official Docker image](https://hub.docker.com/r/rclone/rclone) based on Alpine Linux as a foundation.
 
 ## Application
 
@@ -25,7 +25,7 @@ Sample docker-compose.yml configuration, where the host's rclone.conf is stored 
 
 ```yaml
 cloudplow:
-  image: kdckrs/alpine-cloudplow-rclone-arm
+  image: kdckrs/alpine-cloudplow-rclone
   container_name: cloudplow
   environment:
     - PUID=`id -u cloudplow`
