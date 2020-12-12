@@ -2,6 +2,7 @@
 
 TARGETARCH=$1
 TARGETVARIANT=$2
+
 case ${TARGETARCH} in
 arm)
   \

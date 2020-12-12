@@ -47,7 +47,7 @@ COPY ./get-latest-s6-overlay.sh /tmp
 # install latest s6-overlay via helper script for process management
 RUN apk -Uq --no-cache add curl && \
     chmod +x /tmp/get-latest-s6-overlay.sh && \
-    /tmp/get-latest-s6-overlay.sh $TARGET_ARCH $TARGET_VARIANT && \
+    /tmp/get-latest-s6-overlay.sh $TARGETARCH $TARGETVARIANT && \
     rm /tmp/get-latest-s6-overlay.sh && \
     apk -q del curl
 
