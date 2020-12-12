@@ -67,8 +67,8 @@ jobs:
           echo "${DOCKER_PASSWORD}" | docker login --username "${DOCKER_USERNAME}" --password-stdin
 
       - name: Enable experimental
-          run: |
-            mkdir -p ~/.docker && echo '{"experimental": "enabled"}' > ~/.docker/config.json
+        run: |
+          mkdir -p ~/.docker && echo '{"experimental": "enabled"}' > ~/.docker/config.json
 
       - name: Create docker manifest
         run: |
