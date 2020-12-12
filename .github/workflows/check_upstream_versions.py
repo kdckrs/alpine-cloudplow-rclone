@@ -30,7 +30,7 @@ except docker.errors.ContainerError as e:
 current_versions['rclone_release_name'] = requests.get(
     'https://api.github.com/repos/rclone/rclone/releases/latest').json()["tag_name"]
 current_versions['cloudplow_commit_ref'] = requests.get(
-    'https://api.github.com/repos/l3uddz/cloudplow/commits/develop').json()["sha"]
+    'https://api.github.com/repos/l3uddz/cloudplow/commits/master').json()["sha"]
 current_versions['alpine-cloudplow_commit_ref'] = Repo(
     '.').commit('HEAD').hexsha
 current_versions['s6_release'] = requests.get(

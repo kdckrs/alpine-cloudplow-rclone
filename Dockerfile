@@ -4,6 +4,8 @@ ARG BUILD_DATE="unknown"
 ARG COMMIT_AUTHOR="unknown"
 ARG VCS_REF="unknown"
 ARG VCS_URL="unknown"
+ARG TARGETARCH
+ARG TARGETVARIANT
 
 LABEL maintainer=${COMMIT_AUTHOR} \
     org.label-schema.vcs-ref=${VCS_REF} \
@@ -40,14 +42,12 @@ RUN apk -U add --no-cache \
     tzdata && \
     python3 -m pip install --no-cache-dir --upgrade pip
 
-# install s6-overlay for process management
+COPY ./get-latest-s6-overlay.sh /tmp
+
+# install latest s6-overlay via helper script for process management
 RUN apk -Uq --no-cache add curl && \
-    curl -sX GET "https://api.github.com/repos/just-containers/s6-overlay/releases/latest" | awk '/tag_name/{print $4;exit}' FS='[""]' > /etc/S6_RELEASE && \
-    wget https://github.com/just-containers/s6-overlay/releases/download/`cat /etc/S6_RELEASE`/s6-overlay-armhf.tar.gz -O /tmp/s6-overlay.tar.gz && \
-    tar xzf /tmp/s6-overlay.tar.gz -C / && \
-    rm /tmp/s6-overlay.tar.gz && \
-    apk -q del curl && \
-    echo "Installed s6-overlay `cat /etc/S6_RELEASE`"
+    ./get-latest-s6-overlay.sh $TARGET_ARCH $TARGET_VARIANT && rm /tmp/get-latest-s6-overlay.sh && \
+    apk -q del curl
 
 # download cloudplow
 RUN git clone --depth 1 https://github.com/l3uddz/cloudplow /opt/cloudplow
