@@ -157,7 +157,18 @@ Please refer to the official [cloudplow](https://github.com/l3uddz/cloudplow) do
 
 ### rclone auto mount remote during boot (using this image)
 
-Uncomment the docker-compose directives as documented and then add the following line in your /etc/rc.local (update <user):
-```
-su <user> -c 'docker exec --user 1000:1000 cloudplow rclone mount -vvv --daemon google:Media /data/remote'
+Uncomment the docker-compose directives as documented before and mount the below script in your cloudplox container at `/etc/services.d/rclone/run`
+
+```shell
+#!/usr/bin/with-contenv sh
+
+uid=${PUID:-1000}
+user=$(getent passwd $uid | awk -F: '{print $1}')
+
+# Kill existing mounts
+if ls -1qA /data/remote | grep -q .
+then ! killall rclone ||trap true && fusermount -u /data/remote || true
+fi
+
+exec s6-setuidgid $user /usr/local/bin/rclone mount google:Media /data/remote
 ```
