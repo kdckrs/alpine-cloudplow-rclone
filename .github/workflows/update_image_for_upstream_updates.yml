@@ -1,4 +1,4 @@
-name: Rebuild with upstream updates
+name: Build
 on:
   push:
   workflow_dispatch:
