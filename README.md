@@ -20,6 +20,8 @@ Cloudplow is an automatic rclone remote uploader with support for scheduled tran
 
 ## Usage
 
+### Cloudplow
+
 ```yaml
 cloudplow:
   image: kdckrs/alpine-cloudplow-rclone
@@ -152,3 +154,10 @@ Upon first run, the container will generate a sample config.json (if you haven't
 ```
 
 Please refer to the official [cloudplow](https://github.com/l3uddz/cloudplow) documentation for additional information.
+
+### rclone auto mount remote during boot (using this image)
+
+Uncomment the docker-compose directives as documented and then add the following line in your /etc/rc.local (update <user):
+```
+su <user> -c 'docker exec --user 1000:1000 cloudplow rclone mount -vvv --daemon google:Media /data/remote'
+```
