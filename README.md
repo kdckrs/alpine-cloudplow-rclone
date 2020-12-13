@@ -1,6 +1,6 @@
 # alpine-cloudplow-rclone
 
-[![License: GPL v3](https://img.shields.io/badge/License-GPL%203-blue.svg?style=flat-square)](https://github.com/kdckrs/alpine-cloudplow-rclone/blob/main/LICENSE) [![Github builds](https://img.shields.io/github/workflow/status/kdckrs/alpine-cloudplow-rclone/Rebuild%20with%20upstream%20updates?label=GitHub%20builds)]
+[![License: GPL v3](https://img.shields.io/badge/License-GPL%203-blue.svg?style=flat-square)](https://github.com/kdckrs/alpine-cloudplow-rclone/blob/main/LICENSE)
 [![Build Status](https://github.com/kdckrs/alpine-cloudplow-rclone/workflows/Build/badge.svg)](https://github.com/kdckrs/alpine-cloudplow-rclone/actions)
 [![Docker Pulls](https://img.shields.io/docker/pulls/kdckrs/alpine-cloudplow-rclone)](https://hub.docker.com/r/kdckrs/alpine-cloudplow-rclone)
 [![rclone version](https://img.shields.io/github/v/release/rclone/rclone?label=rclone%20version)](https://hub.docker.com/r/rclone/rclone)
@@ -20,102 +20,134 @@ Cloudplow is an automatic rclone remote uploader with support for scheduled tran
 
 ## Usage
 
-Sample docker-compose.yml configuration, where the host's rclone.conf is stored in ~/.config/rclone, one or more Google Drive service account .json files is located in ~/google_drive_service_accounts, and media to upload is stored in /imported_media:
-
 ```yaml
 cloudplow:
   image: kdckrs/alpine-cloudplow-rclone
   container_name: cloudplow
   environment:
-    - PUID=`id -u cloudplow`
-    - PGID=`id -g cloudplow`
+    - PUID=1000 # Optionally replace this with the uid of your user
+    - PGID=1000 # Optionally replace this with the gid of your user
     - CLOUDPLOW_CONFIG=/config/config.json
     - CLOUDPLOW_LOGFILE=/config/cloudplow.log
     - CLOUDPLOW_LOGLEVEL=DEBUG
     - CLOUDPLOW_CACHEFILE=/config/cache.db
+  # uncomment below if you are planning to run the rclone mount command using this container
+  #cap_add: 
+  #  - SYS_ADMIN
+  #devices:
+  #  - /dev/fuse
+  #security_opt:
+  #  - apparmor:unconfined
   volumes:
-    - /opt/cloudplow:/config
-    - /home/<user>/.config/rclone:/rclone_config
-    - /home/<user>/google_drive_service_accounts:/service_accounts
-    - /mnt:/data
+    #- ./conf/cloudplow/config.json:/config/config.json # Uncomment if you have a local cloudplow config ready
+    - /usr/local/etc/rclone:/config/rclone # path to rclone config path, can be /home/<user>/.config/rclone if already installed
+    - /usr/local/etc/cloudplow:/config # path where the cloudplow config will be stored 
+    - /mnt:/data:shared # the folder where all your media and linux iso's are stored ;)
     - /etc/localtime:/etc/localtime:ro
+    # - /home/<user>/google_drive_service_accounts:/service_accounts # optionally if you are using Google drive service accounts
+    #- /etc/passwd:/etc/passwd:ro #uncomment below if you are planning to run the rclone mount command using this container
+    #- /etc/group:/etc/group:ro #uncomment below if you are planning to run the rclone mount command using this container
+    #- /etc/user:/etc/user:ro #uncomment below if you are planning to run the rclone mount command using this container
+    #- /etc/fuse.conf:/etc/fuse.conf:ro #uncomment below if you are planning to run the rclone mount command using this container
   restart: unless-stopped
 ```
 
-Upon first run, the container will generate a sample config.json in the container's /config. Edit this config.json to your liking, making sure to set rclone_config_path to the location of the rclone.conf you mapped into the container. Some suggested settings for uploading to a remote, but not synchronizing between remotes, are given below:
+Upon first run, the container will generate a sample config.json (if you haven't already linked an existing one) in the container's /config. Edit this config.json to your liking, making sure to set rclone_config_path to the location of the rclone.conf you mapped into the container. Some suggested settings for uploading to a remote, but not synchronizing between remotes, are given below:
 
 ```json
-    "core": {
-        ...
-        "rclone_binary_path": "/usr/bin/rclone",
-        "rclone_config_path": "/rclone_config/rclone.conf"
-        ...
-    },
-    ...
-    "plex": {
-        ...
-        "rclone": {
-            ...
-            "url": "http://127.0.0.1:7949"
-            ...
-        },
-        ...
-        "url": "http://plex:32400" # URL of plex server, this example value specifies a Plex Docker container running on the same host.
-        ...
-    },
-    "remotes": {
-        ...
-        "media": {
-            "rclone_command": "move",
-            "rclone_excludes": [
-            ],
-            "rclone_extras": {
-                "--checkers": 4,
-                "--drive-chunk-size": "8M",
-                "--fast-list": null,
-                "--min-age": "1d",
-                "--skip-links": null,
-                "--stats": "10s",
-                "--timeout": "30s",
-                "--transfers": 1,
-                "--user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36",
-                "-vv": null
-            },
-            "rclone_sleeps": {
-                "Failed to copy: googleapi: Error 403: User rate limit exceeded": {
-                    "count": 5,
-                    "sleep": 25,
-                    "timeout": 3600
-                }
-            },
-            "remove_empty_dir_depth": 2,
-            "sync_remote": "googledrive:/media/",
-            "upload_folder": "/data/local/Media",
-            "upload_remote": "googledrive:/media/"
-        },
-        ...
-    },
-    "syncer": {},
-    "uploader": {
-        ...
-        "media": {
-            "check_interval": 30,
-            "exclude_open_files": true,
-            "max_size_gb": 0,
-            "opened_excludes": [
-                "/data/local/Media"
-            ],
-            "schedule": {
-                "allowed_from": "01:00",
-                "allowed_until": "09:00",
-                "enabled": false
-            },
-            "size_excludes": [
-            ],
-            "service_account_path":"/service_accounts/"
-        },
-        ...
+{
+  "core": {
+    "dry_run": true,
+    "rclone_binary_path": "/usr/bin/rclone",
+    "rclone_config_path": "/config/rclone/rclone.conf"
+  },
+  "hidden": {
+    "/mnt/local/.unionfs-fuse": {
+      "hidden_remotes": [
+        "google"
+      ]
     }
+  },
+  "notifications": {},
+  "nzbget": {
+    "enabled": false,
+    "url": "https://user:password@nzbget.domain.com"
+  },
+  "plex": {
+    "enabled": false,
+    "max_streams_before_throttle": 1,
+    "notifications": false,
+    "poll_interval": 60,
+    "rclone": {
+      "throttle_speeds": {
+        "1": "50M",
+        "2": "40M",
+        "3": "30M",
+        "4": "20M",
+        "5": "10M"
+      },
+      "url": "http://localhost:7949"
+    },
+    "token": "",
+    "url": "https://plex.domain.com"
+  },
+  "remotes": {
+    "google": {
+      "hidden_remote": "google:",
+      "rclone_command": "move",
+      "rclone_excludes": [
+        "**partial~",
+        "**_HIDDEN~",
+        ".unionfs/**",
+        ".unionfs-fuse/**"
+      ],
+      "rclone_extras": {
+        "--checkers": 16,
+        "--drive-chunk-size": "64M",
+        "--skip-links": null,
+        "--stats": "60s",
+        "--transfers": 8,
+        "--user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36",
+        "--verbose": 1
+      },
+      "rclone_sleeps": {
+        "Failed to copy: googleapi: Error 403: User rate limit exceeded": {
+          "count": 5,
+          "sleep": 25,
+          "timeout": 3600
+        },
+        " 0/s,": {
+          "count": 16,
+          "sleep": 25,
+          "timeout": 62
+        }
+      },
+      "remove_empty_dir_depth": 2,
+      "sync_remote": "google:/Media",
+      "upload_folder": "/mnt/local/Media",
+      "upload_remote": "google:/Media"
+    }
+  },
+  "syncer": {},
+  "uploader": {
+    "google": {
+      "can_be_throttled": true,
+      "check_interval": 30,
+      "exclude_open_files": true,
+      "max_size_gb": 25,
+      "opened_excludes": [
+        "/downloads/"
+      ],
+      "schedule": {
+        "allowed_from": "04:00",
+        "allowed_until": "08:00",
+        "enabled": false
+      },
+      "size_excludes": [
+        "downloads/*"
+      ]
+    }
+  }
 }
 ```
 
